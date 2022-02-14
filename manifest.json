@@ -1,0 +1,11 @@
+{
+    "name": "Paste Notes",
+    "description": "Paste notes to inputs easily",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": ["storage"],
+    "options_page": "options.html"
+}

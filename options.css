@@ -1,0 +1,29 @@
+body {
+    display: flex;
+    font-size: 2rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+textarea {
+    width: 100%;
+    height: 400px;
+}
+
+input {
+    font-size: inherit;
+}
+
+button {
+    font-size: inherit;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 10px;
+}
