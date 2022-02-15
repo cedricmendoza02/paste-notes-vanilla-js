@@ -6,6 +6,11 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["storage"],
+    "permissions": [
+        "contextMenus",
+        "scripting",
+        "webNavigation",
+        "storage"
+    ],
     "options_page": "options.html"
 }
