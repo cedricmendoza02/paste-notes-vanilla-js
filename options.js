@@ -6,8 +6,8 @@ const moveDownBtn = document.querySelector("[move-down-btn]");
 const saveBtn = document.querySelector("[save-btn]");
 
 const displayList = () => {
-    let data = fetchData();
-    data.then(data => {
+    fetchData()
+    .then(data => {
         if(data.length < 1) return;
         listContainer.innerHTML = '';
         data.forEach(note => {
@@ -18,22 +18,20 @@ const displayList = () => {
             listContainer.append(li);
         })
     })
-    
 }
 
 const moveUp = () => {
     if(titleInput.value === "") return;
     let target = titleInput.value;
-    let targetIndex = findTargetIndex(target)
+    findTargetIndex(target)
     .then(index => {
-        let data = fetchData()
+        fetchData()
         .then(data => {
-            if(targetIndex === 0) return;
-            let temp = data[targetIndex - 1] // get item after
-            data[targetIndex - 1] = data[targetIndex]
-            data[targetIndex] = temp;
-            chrome.storage.sync.set({"data": [...data]})
-            displayList();
+            if(index === 0) return;
+            let temp = data[index - 1] // get item before
+            data[index - 1] = data[index]
+            data[index] = temp;
+            chrome.storage.sync.set({"data": data}, () => displayList())
         })
     })
 }
@@ -41,14 +39,14 @@ const moveUp = () => {
 const moveDown = () => {
     if(titleInput.value === "") return;
     let target = titleInput.value;
-    let targetIndex = findTargetIndex(target)
+    findTargetIndex(target)
     .then(index => {
-        let data = fetchData()
+        fetchData()
         .then(data => {
-            if(targetIndex === data.length - 1) return;
-            let temp = data[targetIndex + 1] // get item after
-            data[targetIndex + 1] = data[targetIndex]
-            data[targetIndex] = temp;
+            if(index === data.length - 1) return;
+            let temp = data[index + 1] // get item after
+            data[index + 1] = data[index]
+            data[index] = temp;
             chrome.storage.sync.set({"data": data}, () => displayList())
         })
     })
@@ -57,7 +55,7 @@ const moveDown = () => {
 const save = (e) => {
     e.preventDefault();
     if(titleInput.value === "") return;
-    let notesList = fetchData()
+    fetchData()
     .then(data => {
         chrome.storage.sync.set({"data": [...data, 
             {
@@ -81,8 +79,8 @@ const fetchData = () => {
 
 const findTargetIndex = (target) => {
     let targetIndex = -1;
-    let notesList = fetchData();
-    let result = notesList.then(data => {
+    let result = fetchData()
+    .then(data => {
         let targetIndex;
         data.some((note, i) => {
             if(note.title === target) {
@@ -99,8 +97,8 @@ const findTargetIndex = (target) => {
 const setActive = (e) => {
     const targetType = e.type;
     const target = targetType == "input" ? e.target.value : e.target.innerText;
-    let targetIndex = findTargetIndex(target)
-    targetIndex.then(index => {
+    findTargetIndex(target)
+    .then(index => {
         if(index === -1) return;
         document.querySelectorAll('.note').forEach((note,i) => {
             note.toggleAttribute("selected", false);

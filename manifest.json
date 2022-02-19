@@ -12,5 +12,7 @@
         "webNavigation",
         "storage"
     ],
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "optional_permissions": ["tabs"],
+    "host_permissions": ["https://cbre.service-now.com/*"]
 }
