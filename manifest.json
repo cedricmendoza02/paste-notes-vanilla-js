@@ -12,6 +12,12 @@
         "webNavigation",
         "storage"
     ],
+    "content_scripts": [
+        {
+            "matches": ["https://cbre.service-now.com/*"],
+            "js": ["content-script.js"]
+        }
+    ],
     "options_page": "options.html",
     "optional_permissions": ["tabs"],
     "host_permissions": ["https://cbre.service-now.com/*"]

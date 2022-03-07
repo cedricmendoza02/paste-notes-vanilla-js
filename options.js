@@ -1,3 +1,7 @@
+window.addEventListener("click", e => {
+    console.log(e);
+})
+
 const titleInput = document.querySelector("input");
 const contentInput = document.querySelector("textarea");
 const listContainer = document.querySelector("ul");
@@ -5,6 +9,7 @@ const moveUpBtn = document.querySelector("[move-up-btn]");
 const moveDownBtn = document.querySelector("[move-down-btn]");
 const saveBtn = document.querySelector("[save-btn]");
 
+// Displays the list. Fires whenever chrome storage changes
 const displayList = () => {
     fetchData()
     .then(data => {
@@ -20,6 +25,7 @@ const displayList = () => {
     })
 }
 
+// move the active note up a level
 const moveUp = () => {
     if(titleInput.value === "") return;
     let target = titleInput.value;
@@ -36,6 +42,7 @@ const moveUp = () => {
     })
 }
 
+// move the active note down a level
 const moveDown = () => {
     if(titleInput.value === "") return;
     let target = titleInput.value;
@@ -52,6 +59,7 @@ const moveDown = () => {
     })
 }
 
+// save input contents to the list and chrome storage
 const save = (e) => {
     e.preventDefault();
     if(titleInput.value === "") return;
@@ -71,6 +79,7 @@ const save = (e) => {
     })
 }
 
+// fetches data from chrome storage
 const fetchData = () => {
     return new Promise((resolve, reject) => {
         chrome.storage.sync.get(null, result => resolve(result.data))
@@ -94,6 +103,7 @@ const findTargetIndex = (target) => {
     return result;
 }
 
+// Clicking an existing note, populates the input fields with the data stored
 const setActive = (e) => {
     const targetType = e.type;
     const target = targetType == "input" ? e.target.value : e.target.innerText;
@@ -101,7 +111,7 @@ const setActive = (e) => {
     .then(index => {
         if(index === -1) return;
         document.querySelectorAll('.note').forEach((note,i) => {
-            note.toggleAttribute("selected", false);
+            note.setAttribute("selected", false);
             if(i === index) {
                 note.setAttribute("selected", true);
             }

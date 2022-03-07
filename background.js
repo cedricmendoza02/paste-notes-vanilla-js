@@ -1,7 +1,8 @@
 let parent, child;
 
-chrome.storage.sync.set({"data": []})
+
 chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.set({"data": []}) // initialize data to an empty array
   parent = chrome.contextMenus.create({
     "title": "Insert text",
     "contexts": ["all"],
@@ -10,8 +11,10 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 chrome.storage.onChanged.addListener(changes => {
-  chrome.contextMenus.removeAll();
-  parent = "";
+  chrome.contextMenus.removeAll(); // removes all context menus
+  parent = ""; 
+
+  // re-create the context menus
   parent = chrome.contextMenus.create({
     "title": "Insert text",
     "contexts": ["all"],
@@ -30,6 +33,9 @@ chrome.storage.onChanged.addListener(changes => {
 })
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  console.log(info);
-  console.log(tab);
+  console.log("tab", tab);
+  console.log("info", info);
+  chrome.tabs.sendMessage(tab.id, {target: info.menuItemId}, response => {
+    console.log(response.done);
+  })
 })
