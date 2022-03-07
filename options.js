@@ -62,21 +62,27 @@ const moveDown = () => {
 // save input contents to the list and chrome storage
 const save = (e) => {
     e.preventDefault();
-    if(titleInput.value === "") return;
-    fetchData()
-    .then(data => {
-        chrome.storage.sync.set({"data": [...data, 
-            {
-                "title": titleInput.value,
-                "content": contentInput.value
-            }]})
-        return fetchData();
-    })
+    let target = titleInput.value;
+    if(target === "") return;
+    findTargetIndex(target)
     .then(result => {
-        displayList();
-        titleInput.value = "";
-        contentInput.value = "";
+        if (result > -1) return
+        fetchData()
+        .then(data => {
+            chrome.storage.sync.set({"data": [...data, 
+                {
+                    "title": titleInput.value,
+                    "content": contentInput.value
+                }]})
+            return fetchData();
+        })
+        .then(result => {
+            displayList();
+            titleInput.value = "";
+            contentInput.value = "";
+        })
     })
+    
 }
 
 // fetches data from chrome storage
@@ -90,7 +96,6 @@ const findTargetIndex = (target) => {
     let targetIndex = -1;
     let result = fetchData()
     .then(data => {
-        let targetIndex;
         data.some((note, i) => {
             if(note.title === target) {
                 targetIndex = i;
