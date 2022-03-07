@@ -1,4 +1,6 @@
 console.log("Installed!");
+let activeElement;
+
 chrome.runtime.onMessage.addListener(
     (request, sender, sendresponse) => {
         
@@ -6,11 +8,14 @@ chrome.runtime.onMessage.addListener(
         console.log("sender", sender)
         sendresponse({done: "done"})
 
-        let activeElement = getActiveElement(document.activeElement);
-        console.log(activeElement);
+        activeElement = getActiveElement(document.activeElement);
+        chrome.storage.sync.get(null, (result) => {
+            let note = result.data.find(element => element.title === request.target)
+            activeElement.value += note.content;
+        })
     }
 )
 
 const getActiveElement = (activeElement) => {
-    return activeElement
+    return activeElement.contentWindow.document.activeElement
 }
